@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { User, Heart, MessageCircle } from 'lucide-react';
+import { User, Heart, MessageCircle, ThumbsDown } from 'lucide-react';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Posts = () => {
@@ -69,10 +69,23 @@ const Posts = () => {
                   </div>
                   
                   <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-1 text-red-500">
-                      <Heart className="w-4 h-4" />
-                      <span className="text-sm">{post.reactions}</span>
-                    </div>
+                    {post.reactions && typeof post.reactions === 'object' ? (
+                      <>
+                        <div className="flex items-center space-x-1 text-red-500">
+                          <Heart className="w-4 h-4" />
+                          <span className="text-sm">{post.reactions.likes || 0}</span>
+                        </div>
+                        <div className="flex items-center space-x-1 text-gray-500">
+                          <ThumbsDown className="w-4 h-4" />
+                          <span className="text-sm">{post.reactions.dislikes || 0}</span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex items-center space-x-1 text-red-500">
+                        <Heart className="w-4 h-4" />
+                        <span className="text-sm">{post.reactions || 0}</span>
+                      </div>
+                    )}
                     <div className="flex items-center space-x-1 text-blue-500">
                       <MessageCircle className="w-4 h-4" />
                       <span className="text-sm">Comments</span>
