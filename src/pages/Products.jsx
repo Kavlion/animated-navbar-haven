@@ -1,8 +1,9 @@
 
-import { useState } from 'react';
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Star, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Products = () => {
@@ -26,7 +27,7 @@ const Products = () => {
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="w-full py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -37,7 +38,7 @@ const Products = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading ? (
             // Skeleton loading
             Array.from({ length: 12 }).map((_, index) => (
@@ -45,9 +46,9 @@ const Products = () => {
             ))
           ) : (
             products?.products?.map((product, index) => (
-              <div
+              <Card
                 key={product.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale"
+                className="border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale h-full flex flex-col"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
                 <div className="aspect-square overflow-hidden">
@@ -58,11 +59,11 @@ const Products = () => {
                   />
                 </div>
                 
-                <div className="p-4">
+                <CardContent className="p-4 flex flex-col flex-grow">
                   <h3 className="font-semibold text-gray-900 mb-2 line-clamp-2">
                     {product.title}
                   </h3>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">
+                  <p className="text-sm text-gray-600 mb-3 line-clamp-2 flex-grow">
                     {product.description}
                   </p>
                   
@@ -78,14 +79,14 @@ const Products = () => {
                     </span>
                   </div>
                   
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between mt-auto pt-3 border-t border-gray-100">
                     <div className="flex items-center space-x-2">
                       <span className="text-lg font-bold text-gray-900">
                         ${product.price}
                       </span>
                       {product.discountPercentage > 0 && (
                         <span className="text-sm text-green-600 bg-green-100 px-2 py-1 rounded">
-                          -{product.discountPercentage}%
+                          -{Math.round(product.discountPercentage)}%
                         </span>
                       )}
                     </div>
@@ -97,8 +98,8 @@ const Products = () => {
                       Add
                     </Button>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))
           )}
         </div>

@@ -1,6 +1,8 @@
 
+import React from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Clock, Users, Star } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Recipes = () => {
@@ -24,7 +26,7 @@ const Recipes = () => {
   }
 
   return (
-    <div className="min-h-screen py-8">
+    <div className="w-full py-8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
@@ -35,7 +37,7 @@ const Recipes = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             // Skeleton loading
             Array.from({ length: 9 }).map((_, index) => (
@@ -43,9 +45,9 @@ const Recipes = () => {
             ))
           ) : (
             recipes?.recipes?.map((recipe, index) => (
-              <div
+              <Card
                 key={recipe.id}
-                className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale"
+                className="border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale h-full flex flex-col"
                 style={{ animationDelay: `${index * 100}ms` }}
               >
                 <div className="aspect-video overflow-hidden">
@@ -56,7 +58,7 @@ const Recipes = () => {
                   />
                 </div>
                 
-                <div className="p-6">
+                <CardContent className="p-6 flex flex-col flex-grow">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">
                     {recipe.name}
                   </h3>
@@ -76,7 +78,7 @@ const Recipes = () => {
                     </div>
                   </div>
                   
-                  <div className="space-y-3">
+                  <div className="space-y-3 flex-grow">
                     <div>
                       <h4 className="font-medium text-gray-900 mb-2">Ingredients:</h4>
                       <div className="text-sm text-gray-600">
@@ -110,8 +112,8 @@ const Recipes = () => {
                       <span>Difficulty: {recipe.difficulty}</span>
                     </div>
                   </div>
-                </div>
-              </div>
+                </CardContent>
+              </Card>
             ))
           )}
         </div>
