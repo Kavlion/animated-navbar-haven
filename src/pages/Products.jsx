@@ -1,12 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Star, ShoppingCart } from 'lucide-react';
+import { Star, ShoppingCart, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Products = () => {
+  const [visibleProducts, setVisibleProducts] = useState(8); // Initial number of visible products
+  
   const { data: products, isLoading, error } = useQuery({
     queryKey: ['products'],
     queryFn: async () => {
@@ -14,6 +16,10 @@ const Products = () => {
       return response.json();
     },
   });
+
+  const loadMoreProducts = () => {
+    setVisibleProducts(prev => prev + 8); // Load 8 more products
+  };
 
   if (error) {
     return (
@@ -41,11 +47,11 @@ const Products = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading ? (
             // Skeleton loading
-            Array.from({ length: 12 }).map((_, index) => (
+            Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
           ) : (
-            products?.products?.map((product, index) => (
+            products?.products?.slice(0, visibleProducts).map((product, index) => (
               <Card
                 key={product.id}
                 className="border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale h-full flex flex-col"
@@ -103,6 +109,21 @@ const Products = () => {
             ))
           )}
         </div>
+
+        {/* See More Button */}
+        {!isLoading && products?.products && visibleProducts < products.products.length && (
+          <div className="flex justify-center mt-10">
+            <Button 
+              onClick={loadMoreProducts}
+              variant="outline" 
+              size="lg"
+              className="group hover:bg-blue-50 hover:border-blue-200 transition-all duration-300"
+            >
+              See More Products
+              <ChevronDown className="ml-2 group-hover:animate-bounce" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

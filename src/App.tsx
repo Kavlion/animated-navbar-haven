@@ -14,6 +14,7 @@ import Products from "./pages/Products";
 import Users from "./pages/Users";
 import Recipes from "./pages/Recipes";
 import Profile from "./pages/Profile";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import BackToTop from "./components/BackToTop";
 
@@ -28,22 +29,30 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
-            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col">
-              <Header />
-              <main className="flex-grow">
-                <Routes>
-                  <Route path="/" element={<Index />} />
-                  <Route path="/posts" element={<Posts />} />
-                  <Route path="/products" element={<Products />} />
-                  <Route path="/users" element={<Users />} />
-                  <Route path="/recipes" element={<Recipes />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="*" element={<NotFound />} />
-                </Routes>
-              </main>
-              <Footer />
-              <BackToTop />
-            </div>
+            <Routes>
+              <Route path="/login" element={<Login />} />
+              <Route
+                path="*"
+                element={
+                  <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col">
+                    <Header />
+                    <main className="flex-grow">
+                      <Routes>
+                        <Route path="/" element={<Index />} />
+                        <Route path="/posts" element={<Posts />} />
+                        <Route path="/products" element={<Products />} />
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/recipes" element={<Recipes />} />
+                        <Route path="/profile" element={<Profile />} />
+                        <Route path="*" element={<NotFound />} />
+                      </Routes>
+                    </main>
+                    <Footer />
+                    <BackToTop />
+                  </div>
+                }
+              />
+            </Routes>
           </BrowserRouter>
         </AuthProvider>
       </TooltipProvider>

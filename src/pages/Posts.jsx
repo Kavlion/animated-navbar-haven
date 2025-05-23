@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { User, Heart, MessageCircle, ThumbsDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Posts = () => {
+  const [visiblePosts, setVisiblePosts] = useState(6); // Initial number of visible posts
+
   const { data: posts, isLoading, error } = useQuery({
     queryKey: ['posts'],
     queryFn: async () => {
@@ -13,6 +16,10 @@ const Posts = () => {
       return response.json();
     },
   });
+
+  const loadMorePosts = () => {
+    setVisiblePosts(prev => prev + 6); // Load 6 more posts
+  };
 
   if (error) {
     return (
@@ -27,91 +34,76 @@ const Posts = () => {
 
   return (
     <div className="w-full py-8">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-12 animate-fade-in">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             Latest Posts
           </h1>
           <p className="text-xl text-gray-600">
-            Discover engaging articles and stories from our community
+            Explore thought-provoking content from our community
           </p>
         </div>
 
-        <div className="grid grid-cols-1 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             // Skeleton loading
             Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
           ) : (
-            posts?.posts?.map((post, index) => (
-              <Card
-                key={post.id}
-                className="border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 animate-fade-in"
-                style={{ animationDelay: `${index * 100}ms` }}
+            posts?.posts?.slice(0, visiblePosts).map((post) => (
+              <Card 
+                key={post.id} 
+                className="border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale h-full flex flex-col"
               >
-                <CardContent className="p-6">
+                <CardContent className="p-6 flex flex-col flex-grow">
                   <div className="mb-4">
-                    <h2 className="text-xl font-semibold text-gray-900 mb-2 hover:text-blue-600 transition-colors cursor-pointer">
+                    <h2 className="text-xl font-semibold text-gray-900 mb-2 line-clamp-2">
                       {post.title}
                     </h2>
-                    <p className="text-gray-600 leading-relaxed">
-                      {post.body}
+                    <p className="text-sm text-gray-500">
+                      #{post.tags.join(', #')}
                     </p>
                   </div>
                   
-                  <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                    <div className="flex items-center space-x-2">
-                      <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full flex items-center justify-center">
-                        <User className="w-4 h-4 text-white" />
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        User {post.userId}
+                  <p className="text-gray-700 flex-grow line-clamp-4 mb-4">
+                    {post.body}
+                  </p>
+                  
+                  <div className="mt-auto pt-4 border-t border-gray-100">
+                    <div className="flex justify-between items-center text-sm">
+                      <span className="text-blue-600">
+                        {post.reactions} reactions
                       </span>
-                    </div>
-                    
-                    <div className="flex items-center space-x-4">
-                      {post.reactions && typeof post.reactions === 'object' ? (
-                        <>
-                          <div className="flex items-center space-x-1 text-red-500">
-                            <Heart className="w-4 h-4" />
-                            <span className="text-sm">{post.reactions.likes || 0}</span>
-                          </div>
-                          <div className="flex items-center space-x-1 text-gray-500">
-                            <ThumbsDown className="w-4 h-4" />
-                            <span className="text-sm">{post.reactions.dislikes || 0}</span>
-                          </div>
-                        </>
-                      ) : (
-                        <div className="flex items-center space-x-1 text-red-500">
-                          <Heart className="w-4 h-4" />
-                          <span className="text-sm">{post.reactions || 0}</span>
-                        </div>
-                      )}
-                      <div className="flex items-center space-x-1 text-blue-500">
-                        <MessageCircle className="w-4 h-4" />
-                        <span className="text-sm">Comments</span>
-                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="sm" 
+                        className="text-gray-700 hover:text-blue-600"
+                      >
+                        Read More
+                      </Button>
                     </div>
                   </div>
-                  
-                  {post.tags && (
-                    <div className="flex flex-wrap gap-2 mt-4">
-                      {post.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded-full"
-                        >
-                          #{tag}
-                        </span>
-                      ))}
-                    </div>
-                  )}
                 </CardContent>
               </Card>
             ))
           )}
         </div>
+
+        {/* See More Button */}
+        {!isLoading && posts?.posts && visiblePosts < posts.posts.length && (
+          <div className="flex justify-center mt-10">
+            <Button 
+              onClick={loadMorePosts}
+              variant="outline" 
+              size="lg"
+              className="group hover:bg-blue-50 hover:border-blue-200 transition-all duration-300"
+            >
+              See More Posts
+              <ChevronDown className="ml-2 group-hover:animate-bounce" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );

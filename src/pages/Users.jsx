@@ -1,11 +1,14 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { MapPin, Mail, Phone, Building } from 'lucide-react';
+import { MapPin, Mail, Phone, Building, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Users = () => {
+  const [visibleUsers, setVisibleUsers] = useState(8); // Initial number of visible users
+  
   const { data: users, isLoading, error } = useQuery({
     queryKey: ['users'],
     queryFn: async () => {
@@ -13,6 +16,10 @@ const Users = () => {
       return response.json();
     },
   });
+
+  const loadMoreUsers = () => {
+    setVisibleUsers(prev => prev + 8); // Load 8 more users
+  };
 
   if (error) {
     return (
@@ -40,11 +47,11 @@ const Users = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {isLoading ? (
             // Skeleton loading
-            Array.from({ length: 9 }).map((_, index) => (
+            Array.from({ length: 8 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
           ) : (
-            users?.users?.map((user, index) => (
+            users?.users?.slice(0, visibleUsers).map((user, index) => (
               <Card
                 key={user.id}
                 className="border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale"
@@ -97,6 +104,21 @@ const Users = () => {
             ))
           )}
         </div>
+
+        {/* See More Button */}
+        {!isLoading && users?.users && visibleUsers < users.users.length && (
+          <div className="flex justify-center mt-10">
+            <Button 
+              onClick={loadMoreUsers}
+              variant="outline" 
+              size="lg"
+              className="group hover:bg-blue-50 hover:border-blue-200 transition-all duration-300"
+            >
+              See More Users
+              <ChevronDown className="ml-2 group-hover:animate-bounce" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
