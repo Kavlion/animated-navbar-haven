@@ -46,7 +46,7 @@ const Profile = () => {
                     <User className="w-5 h-5" />
                     <div>
                       <span className="font-medium">Full Name:</span>
-                      <p>{user.firstName} {user.maidenName} {user.lastName}</p>
+                      <p>{user.firstName} {user.maidenName || ''} {user.lastName}</p>
                     </div>
                   </div>
                   
@@ -62,17 +62,19 @@ const Profile = () => {
                     <Phone className="w-5 h-5" />
                     <div>
                       <span className="font-medium">Phone:</span>
-                      <p>{user.phone}</p>
+                      <p>{user.phone || 'Not provided'}</p>
                     </div>
                   </div>
                   
-                  <div className="flex items-center space-x-3 text-gray-600">
-                    <Calendar className="w-5 h-5" />
-                    <div>
-                      <span className="font-medium">Birth Date:</span>
-                      <p>{new Date(user.birthDate).toLocaleDateString()}</p>
+                  {user.birthDate && (
+                    <div className="flex items-center space-x-3 text-gray-600">
+                      <Calendar className="w-5 h-5" />
+                      <div>
+                        <span className="font-medium">Birth Date:</span>
+                        <p>{new Date(user.birthDate).toLocaleDateString()}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
 
@@ -83,25 +85,29 @@ const Profile = () => {
                 </h2>
                 
                 <div className="space-y-3">
-                  <div className="flex items-start space-x-3 text-gray-600">
-                    <MapPin className="w-5 h-5 mt-1" />
-                    <div>
-                      <span className="font-medium">Address:</span>
-                      <p>{user.address.address}</p>
-                      <p>{user.address.city}, {user.address.state} {user.address.postalCode}</p>
-                      <p>{user.address.country}</p>
+                  {user.address && (
+                    <div className="flex items-start space-x-3 text-gray-600">
+                      <MapPin className="w-5 h-5 mt-1" />
+                      <div>
+                        <span className="font-medium">Address:</span>
+                        <p>{user.address.address}</p>
+                        <p>{user.address.city}, {user.address.state} {user.address.postalCode}</p>
+                        <p>{user.address.country}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                   
-                  <div className="flex items-start space-x-3 text-gray-600">
-                    <Building className="w-5 h-5 mt-1" />
-                    <div>
-                      <span className="font-medium">Company:</span>
-                      <p>{user.company.name}</p>
-                      <p className="text-sm text-gray-500">{user.company.title}</p>
-                      <p className="text-sm text-gray-500">{user.company.department}</p>
+                  {user.company && (
+                    <div className="flex items-start space-x-3 text-gray-600">
+                      <Building className="w-5 h-5 mt-1" />
+                      <div>
+                        <span className="font-medium">Company:</span>
+                        <p>{user.company.name}</p>
+                        <p className="text-sm text-gray-500">{user.company.title}</p>
+                        <p className="text-sm text-gray-500">{user.company.department}</p>
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -113,22 +119,30 @@ const Profile = () => {
               </h2>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
-                <div className="bg-blue-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-blue-600">{user.age}</div>
-                  <div className="text-sm text-gray-600">Years Old</div>
-                </div>
-                <div className="bg-purple-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-purple-600">{user.height}</div>
-                  <div className="text-sm text-gray-600">Height (cm)</div>
-                </div>
-                <div className="bg-green-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-green-600">{user.weight}</div>
-                  <div className="text-sm text-gray-600">Weight (kg)</div>
-                </div>
-                <div className="bg-orange-50 rounded-lg p-4">
-                  <div className="text-2xl font-bold text-orange-600">{user.bloodGroup}</div>
-                  <div className="text-sm text-gray-600">Blood Type</div>
-                </div>
+                {user.age && (
+                  <div className="bg-blue-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-blue-600">{user.age}</div>
+                    <div className="text-sm text-gray-600">Years Old</div>
+                  </div>
+                )}
+                {user.height && (
+                  <div className="bg-purple-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-purple-600">{user.height}</div>
+                    <div className="text-sm text-gray-600">Height (cm)</div>
+                  </div>
+                )}
+                {user.weight && (
+                  <div className="bg-green-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-green-600">{user.weight}</div>
+                    <div className="text-sm text-gray-600">Weight (kg)</div>
+                  </div>
+                )}
+                {user.bloodGroup && (
+                  <div className="bg-orange-50 rounded-lg p-4">
+                    <div className="text-2xl font-bold text-orange-600">{user.bloodGroup}</div>
+                    <div className="text-sm text-gray-600">Blood Type</div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
