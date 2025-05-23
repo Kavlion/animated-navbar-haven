@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { User, Heart, MessageCircle } from 'lucide-react';
 import SkeletonCard from '../components/SkeletonCard';

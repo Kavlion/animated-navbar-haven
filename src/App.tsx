@@ -1,4 +1,5 @@
 
+import React from 'react';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -15,32 +16,35 @@ import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
 import BackToTop from "./components/BackToTop";
 
+// Create a client
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
-            <Header />
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/posts" element={<Posts />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/recipes" element={<Recipes />} />
-              <Route path="/profile" element={<Profile />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-            <BackToTop />
-          </div>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+  <React.StrictMode>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50">
+              <Header />
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/posts" element={<Posts />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/users" element={<Users />} />
+                <Route path="/recipes" element={<Recipes />} />
+                <Route path="/profile" element={<Profile />} />
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+              <BackToTop />
+            </div>
+          </BrowserRouter>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </React.StrictMode>
 );
 
 export default App;
