@@ -1,11 +1,13 @@
-
-import React from 'react';
+import React, { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Clock, Users, Star } from 'lucide-react';
+import { Clock, Users, Star, ChevronDown } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import SkeletonCard from '../components/SkeletonCard';
 
 const Recipes = () => {
+  const [visibleRecipes, setVisibleRecipes] = useState(6); // Initial number of visible recipes
+  
   const { data: recipes, isLoading, error } = useQuery({
     queryKey: ['recipes'],
     queryFn: async () => {
@@ -13,6 +15,10 @@ const Recipes = () => {
       return response.json();
     },
   });
+
+  const loadMoreRecipes = () => {
+    setVisibleRecipes(prev => prev + 6); // Load 6 more recipes
+  };
 
   if (error) {
     return (
@@ -40,11 +46,11 @@ const Recipes = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {isLoading ? (
             // Skeleton loading
-            Array.from({ length: 9 }).map((_, index) => (
+            Array.from({ length: 6 }).map((_, index) => (
               <SkeletonCard key={index} />
             ))
           ) : (
-            recipes?.recipes?.map((recipe, index) => (
+            recipes?.recipes?.slice(0, visibleRecipes).map((recipe, index) => (
               <Card
                 key={recipe.id}
                 className="border border-gray-200 shadow-sm overflow-hidden hover:shadow-lg transition-all duration-300 animate-fade-in hover-scale h-full flex flex-col"
@@ -117,6 +123,21 @@ const Recipes = () => {
             ))
           )}
         </div>
+        
+        {/* See More Button */}
+        {!isLoading && recipes?.recipes && visibleRecipes < recipes.recipes.length && (
+          <div className="flex justify-center mt-10">
+            <Button 
+              onClick={loadMoreRecipes}
+              variant="outline" 
+              size="lg"
+              className="group hover:bg-orange-50 hover:border-orange-200 transition-all duration-300"
+            >
+              See More Recipes
+              <ChevronDown className="ml-2 group-hover:animate-bounce" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   );
